@@ -1,0 +1,9 @@
+node_modules
+scripts/
+public/
+.idea
+.vercel
+dist
+logs
+.env.dev
+.env.prod
