@@ -6,7 +6,9 @@ import { ContactController } from "./contact.controller";
 const router = Router();
 
 router.post(
-   '/contact',
+   '/create-contact',
    validate(ContactValidation.postValidationSchema),
    ContactController.createContact
 );
+
+export const ContactRoutes = router;

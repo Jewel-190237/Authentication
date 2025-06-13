@@ -10,6 +10,7 @@ const contactSchema = new Schema<TContact>({
    email: {
       type: String,
       required: true,
+      unique: [true, "Email already exists"],
    },
    message: {
       type: String,

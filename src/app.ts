@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import middleware from './app/middleware';
 import globalErrorHandler from './app/middleware/globalErrorHandler';
 import notFoundHandler from './app/middleware/notFoundHandler';
-// import router from './app/routes';
+import router from './app/routes';
 import path from 'node:path';
 
 const app = express();
@@ -11,7 +11,7 @@ app.use(middleware);
 
 // eslint-disable-next-line no-undef
 app.use('/public', express.static(path.join(__dirname, './../public')));
-// app.use('/api/v1', router);
+app.use('/api/v1', router);
 
 app.get('/', (_req: Request, res: Response): void => {
     res.status(200).json({
