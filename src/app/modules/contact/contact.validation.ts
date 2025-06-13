@@ -10,13 +10,16 @@ const postValidationSchema = z.object({
          required_error: 'Email is required',
          invalid_type_error: 'Email must be a string',
       })
-      .email({
-         message: 'Invalid email address',
-      }),
+         .email({
+            message: 'Invalid email address',
+         }),
       message: z.string({
          required_error: 'Message is required',
          invalid_type_error: 'Message must be a string',
       }),
+      slug: z.string({
+         invalid_type_error: 'Slug must be a string',
+      }).optional(),
    }),
 });
 

@@ -14,4 +14,14 @@ export class ContactController {
          data: null
       })
    })
+
+   static getContacts = catchAsync(async (req, res) => {
+      const data = await ContactService.getContactsFromDB();
+      sendResponse(res, {
+         statusCode: HttpStatusCode.Ok,
+         success: true,
+         message: 'Contacts fetched successfully',
+         data: data
+      })
+   })
 }

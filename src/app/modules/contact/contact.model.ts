@@ -15,6 +15,9 @@ const contactSchema = new Schema<TContact>({
    message: {
       type: String,
       required: true,
+   },
+   slug: {
+      type: String
    }
 })
 

@@ -11,4 +11,9 @@ router.post(
    ContactController.createContact
 );
 
+router.get(
+   '/get-contacts',
+   ContactController.getContacts
+);
+
 export const ContactRoutes = router;

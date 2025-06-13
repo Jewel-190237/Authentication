@@ -15,4 +15,16 @@ export class ContactService {
       }
       return data;
    }
+
+   static async getContactsFromDB() {
+      const data = await Contact.find();
+      if (!data) {
+         throw new AppError(
+            HttpStatusCode.BadRequest,
+            'Failed to get contacts',
+            'Failed to get contacts, please try again',
+         );
+      }
+      return data;
+   }
 }
