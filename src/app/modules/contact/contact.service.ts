@@ -16,9 +16,9 @@ export class ContactService {
       return data;
    }
 
-   static async getContactsFromDB() {
-      const data = await Contact.find();
-      if (!data) {
+   static async getContactsFromDB(slug: string) {
+      const data = await Contact.find({ slug });
+      if (!data || data.length === 0) {
          throw new AppError(
             HttpStatusCode.BadRequest,
             'Failed to get contacts',
@@ -27,4 +27,5 @@ export class ContactService {
       }
       return data;
    }
+
 }

@@ -1,3 +1,4 @@
+import AppError from "../../errors/AppError";
 import { catchAsync } from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { ContactService } from "./contact.service";
@@ -16,7 +17,16 @@ export class ContactController {
    })
 
    static getContacts = catchAsync(async (req, res) => {
-      const data = await ContactService.getContactsFromDB();
+      const slug = req.query.slug as string;
+      if (!slug) {
+         throw new AppError(
+            HttpStatusCode.BadRequest,
+            'Missing slug',
+            'Slug query parameter is required'
+         );
+      }
+
+      const data = await ContactService.getContactsFromDB(slug);
       sendResponse(res, {
          statusCode: HttpStatusCode.Ok,
          success: true,
