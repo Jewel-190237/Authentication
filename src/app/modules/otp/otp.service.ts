@@ -1,3 +1,5 @@
+import { HttpStatusCode } from "axios";
+import AppError from "../../errors/AppError";
 import OTP from "./otp.model";
 
 export class OTPService {
@@ -7,5 +9,17 @@ export class OTPService {
          code: code,
          action: action
       })
+   }
+
+   static async findOneByQueary(queary: any): Promise<any> {
+      const otp = await OTP.findOne(queary)
+      if (!otp) {
+         throw new AppError(
+            HttpStatusCode.NotFound,
+            'Request Failed',
+            'Invalid or Expired OTP!'
+         )
+      }
+      return otp;
    }
 }
