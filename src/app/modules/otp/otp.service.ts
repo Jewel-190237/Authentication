@@ -14,7 +14,7 @@ export class OTPService {
    // Use when you want OTP (verification step)
    static async findOneByEmail({ email, code, action }: { email: string, code: string, action: string }): Promise<any> {
       const otp = await OTP.findOne({
-         email: email.toLowerCase().trim(),
+         email: email?.toLowerCase()?.trim(),
          code,
          action,
       })
