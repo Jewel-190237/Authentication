@@ -12,8 +12,12 @@ export class OTPService {
    }
 
    // Use when you want OTP (verification step)
-   static async findOneByQueryOrFail(query: any): Promise<any> {
-      const otp = await OTP.findOne(query)
+   static async findOneByEmail({ email, code, action }: { email: string, code: string, action: string }): Promise<any> {
+      const otp = await OTP.findOne({
+         email: email.toLowerCase().trim(),
+         code,
+         action,
+      })
       if (!otp) {
          throw new AppError(
             HttpStatusCode.NotFound,
