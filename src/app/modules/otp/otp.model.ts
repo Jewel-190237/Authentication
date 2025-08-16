@@ -20,8 +20,8 @@ const schema = new Schema<TOTP>(
       },
       expireAt: {
          type: Date,
-         default: Date.now,
-         index: { 'expires': '2m' }
+         default: () => new Date(Date.now() + 2 * 60 * 1000),
+         expires: 0
       }
    },
    {

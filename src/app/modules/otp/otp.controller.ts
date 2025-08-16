@@ -33,7 +33,7 @@ export class OTPController {
          action: action
       }
 
-      const isAlreadySendOTP = await OTPService.findOneByQueary(otpPayload)
+      const isAlreadySendOTP = await OTPService.findOneByQuery(otpPayload)
 
       if (isAlreadySendOTP) {
          throw new AppError(
@@ -71,7 +71,10 @@ export class OTPController {
          statusCode: httpStatus.OK,
          success: true,
          message: 'OTP send, plese check your email',
-         data: identifier
+         data: {
+            email: identifier,
+            otp: OTP
+         }
       })
    })
 
