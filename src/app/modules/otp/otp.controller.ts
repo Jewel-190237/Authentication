@@ -1,57 +1,57 @@
-
-import config from "../../config";
+import { HttpStatusCode } from "axios";
 import AppError from "../../errors/AppError";
 import { catchAsync } from "../../utils/catchAsync";
-import { sendUserEmail } from "../../utils/sendEmail";
-import sendResponse from "../../utils/sendResponse";
 import { checkValidEmail } from "../auth/auth.utils";
 import { OTPService } from "./otp.service";
 import { generateOTP } from "./otp.utils";
-import httpStatus from 'http-status';
+import config from "../../config";
+import { sendUserEmail } from "../../utils/sendEmail";
+import sendResponse from "../../utils/sendResponse";
 
-export class OTPController {
-   static sendOTP = catchAsync(async (req, res) => {
-      const { body } = req.body;
-      const { identifier, action } = body;
-      const validationResultEmail = checkValidEmail(identifier)
+export class OTPComtroller {
+   static sentOTP = catchAsync(async (req, res) => {
+      const { body } = req.body
+      const { identifier, action } = body
 
-      if (!validationResultEmail) {
+      const isEmailvalid = checkValidEmail(identifier);
+      if (!isEmailvalid) {
          throw new AppError(
-            400,
+            HttpStatusCode.BadRequest,
             'Request Failed',
-            'its not a valid Email, please try again with a valid email'
+            'Invalid Email, please input a valid Email'
          )
       }
+
       if (action === 'signup') {
-         //chech is user exixts, show already exits
+         //check user already exists
       }
       else {
-         // chech is user not exixts, user not found
+         //check user is exixts
       }
-      const otpPayload = {
-         email: validationResultEmail?.success ? identifier.toLowerCase().trim() : undefined,
+
+      const optPayload = {
+         email: isEmailvalid.success ? identifier.toLowerCase().trim() : undefined,
          action: action
       }
 
-      const isAlreadySendOTP = await OTPService.findOneByQuery(otpPayload)
+      const isAlreadySendOTP = await OTPService.findOTPByEmail(optPayload)
 
       if (isAlreadySendOTP) {
          throw new AppError(
-            400,
+            HttpStatusCode.BadRequest,
             'Request Failed',
-            'OTP already send. Please wait and try again.',
-         );
+            'Invalid or Expire OTP'
+         )
       }
 
-      const OTP = generateOTP(6)
-
+      const otp = generateOTP(7)
       const data = {
          email: identifier?.toLowerCase().trim() as string,
          subject: `${config.website_name ? config.website_name + ': ' : ''}OTP verification code`,
          message: `<h3>Your verification OTP code is: </h3>
                        <div style="background-color: azure; margin: 01px 0px; padding: 5px">
                            <h3 style="margin-inline-start: 5px; letter-spacing: 3px;">
-                            ${OTP}
+                            ${otp}
                             </h3>
                        </div>
                        <h3>For any kind of help, please contact our support team.</h3>
@@ -60,22 +60,21 @@ export class OTPController {
                        ${config.website_name} | Contact No. 01980445424
                     `,
       };
-      await sendUserEmail(data);
-      await OTPService.postOTPByEmail({
-         email: otpPayload.email,
-         code: OTP,
-         action: otpPayload.action
-      })
 
+      await sendUserEmail(data)
+      await OTPService.postOTPByEmail({
+         email: identifier,
+         otp: otp,
+         action: action
+      })
       sendResponse(res, {
-         statusCode: httpStatus.OK,
          success: true,
-         message: 'OTP send, plese check your email',
+         message: `OTP Send seccessfully, please check to ${identifier}`,
+         statusCode: HttpStatusCode.Created,
          data: {
-            email: identifier,
-            otp: OTP
+            identifier,
+            otp
          }
       })
    })
-
 }

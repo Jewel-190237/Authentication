@@ -1,3 +1,4 @@
+import { TOTP } from "./otp.interface";
 import OTP from "./otp.model";
 
 export class OTPService {
@@ -10,7 +11,7 @@ export class OTPService {
    }
 
    // Use when you just want to check if OTP exists
-   static async findOTPByEmail({ queary }: { queary: any }): Promise<any> {
+   static async findOTPByEmail(queary: Partial<TOTP>): Promise<TOTP | null> {
       return await OTP.findOne(queary)
    }
 }
