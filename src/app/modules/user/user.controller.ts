@@ -2,23 +2,23 @@ import { HttpStatusCode } from "axios";
 import AppError from "../../errors/AppError";
 import { catchAsync } from "../../utils/catchAsync";
 import { OTPService } from "../otp/otp.service";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 import { UserService } from "./user.service";
-import config from "../../config";
 import { createToken } from "../auth/auth.utils";
+import config from "../../config";
 import sendResponse from "../../utils/sendResponse";
-
-export class UserController {
+import httpStatus from 'http-status';
+export class UserComtroller {
    static createNewUser = catchAsync(async (req, res) => {
-      const { body } = req.body
-      let otp;
+      const { body } = req.body;
 
-      otp = await OTPService.findOneByEmail({
+      let code;
+
+      code = await OTPService.findOTPByEmail({
          email: body.email,
-         code: body.otp
+         otp: body.otp
       })
-
-      if (!otp) {
+      if (!code) {
          throw new AppError(
             HttpStatusCode.BadRequest,
             'verification failed',
@@ -26,9 +26,10 @@ export class UserController {
          )
       }
 
-      const startTime = dayjs(otp.createdAt)
+      const startTime = dayjs(code.createdAt)
       const endTime = dayjs(Date.now());
-      const expireTimeInMinutes = endTime.diff(startTime, 'minute')
+      const expireTimeInMinutes = endTime.diff(startTime, 'minutes')
+
       if (expireTimeInMinutes >= 2) {
 
          throw new AppError(
@@ -37,8 +38,10 @@ export class UserController {
             'OTP expired! Please try again.',
          );
       }
-      if (otp && otp.attempts > 0 && body.otp === otp.code) {
+
+      if (code && code.attempts > 0 && code.otp === body.otp) {
          const newUser = await UserService.createNewUser(body)
+
          const tokenPayload: any = {
             _id: newUser?._id,
             name: newUser?.name,
@@ -46,31 +49,20 @@ export class UserController {
             phone: newUser?.phone,
             role: newUser?.role,
          };
+
          const accessToken = createToken(
             tokenPayload,
             config.jwt_access_secret as string,
             config.jwt_access_expires_in as string,
-         );
+
+         )
 
          sendResponse(res, {
-            statusCode: HttpStatusCode.Created,
             success: true,
-            message: "User has been created successfuly",
-            data: {
-               accessToken
-            }
+            statusCode: httpStatus.OK,
+            message: "user created Successfully",
+            data: accessToken
          })
-         return;
       }
-      if (otp) {
-         otp.attempts -= 1;
-         await otp.save();
-      }
-      throw new AppError(
-         HttpStatusCode.BadRequest,
-         'Request Failed',
-         'Invalid OTP! Please try again.',
-      );
-
    })
 }

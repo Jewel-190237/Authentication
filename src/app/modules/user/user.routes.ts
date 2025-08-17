@@ -1,13 +1,14 @@
 import { Router } from "express";
 import validate from "../../middleware/validate";
 import { userValidationSchema } from "./user.validation";
-import { UserController } from "./user.controller";
+import { UserComtroller } from "./user.controller";
+
 
 const routes = Router()
 routes.post(
     '/register',
     validate(userValidationSchema.userRegistrationSchema),
-    UserController.createNewUser
+    UserComtroller.createNewUser
 )
 
 export const UserRoutes: Router = routes
