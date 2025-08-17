@@ -21,12 +21,26 @@ export class OTPComtroller {
             'Invalid Email, please input a valid Email'
          )
       }
-
+      let user = null
       if (action === 'signup') {
-         //check user already exists
+         user = await OTPService.findUserByEmail(identifier)
+         if (user) {
+            throw new AppError(
+               HttpStatusCode.BadRequest,
+               'Request Failed',
+               'User already Exixts, please login'
+            )
+         }
       }
       else {
-         //check user is exixts
+         user = await OTPService.findUserByEmail(identifier)
+         if (!user) {
+            throw new AppError(
+               HttpStatusCode.BadRequest,
+               'Request Failed',
+               'No User found in this account, please register first to login'
+            )
+         }
       }
 
       const optPayload = {
