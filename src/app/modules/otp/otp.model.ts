@@ -7,21 +7,26 @@ const schema = new Schema<TOTP>(
       email: {
          type: String,
          trim: true,
-         lowercase: true
+         lowercase: true,
+         required: true
       },
       code: {
          type: String,
-         trim: true
+         required: true
       },
-      action: String,
+      action: {
+         type: String,
+         enum: ["signup", "forget_password", "profile_setup"],
+         required: true
+      },
       attempts: {
          type: Number,
          default: 3
       },
       expireAt: {
          type: Date,
-         default: () => new Date(Date.now() + 2 * 60 * 1000),
-         expires: 0
+         default: Date.now,
+         index: { expires: '2m' },
       }
    },
    {
@@ -30,6 +35,6 @@ const schema = new Schema<TOTP>(
 )
 
 schema.plugin(mongooseAggregatePaginate)
+const OTP = model<TOTP>('otps', schema)
 
-const OTP = model<TOTP>('otp', schema)
-export default OTP;
+export default OTP

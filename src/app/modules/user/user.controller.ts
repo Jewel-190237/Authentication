@@ -40,15 +40,10 @@ export class UserController {
       if (otp && otp.attempts > 0 && body.otp === otp.code) {
          const newUser = await UserService.createNewUser(body)
          const tokenPayload: any = {
-            //@ts-ignore
             _id: newUser?._id,
-            //@ts-ignore
             name: newUser?.name,
-            //@ts-ignore
             email: newUser?.email,
-            //@ts-ignore
             phone: newUser?.phone,
-            //@ts-ignore
             role: newUser?.role,
          };
          const accessToken = createToken(
