@@ -33,13 +33,45 @@ const userRegistrationSchema = z.object({
          message:
             'Password must be less than or equal to 100 characters',
       }).trim(),
-      
+
       fcm_token: z.string({
          invalid_type_error: 'fcm_token must be string',
       }).optional(),
    }),
 })
 
+const updateUserProfileSchema = z.object({
+   body: z.object({
+      name: z.string({
+         invalid_type_error: "User name must be string",
+      })
+         .min(1, { message: "User name is required" })
+         .max(50, { message: "Name must be less than or equal to 50 characters" })
+         .trim()
+         .optional(),
+
+      phone: z.string({
+         invalid_type_error: "Phone must be string",
+      })
+         .min(6, { message: "Phone number must be at least 6 digits" })
+         .max(20, { message: "Phone number must be less than or equal to 20 digits" })
+         .trim()
+         .optional(),
+
+      image: z.string({
+         invalid_type_error: "Image must be string",
+      }).url("Image must be a valid URL")
+         .optional(),
+
+      country: z.string().optional(),
+      city: z.string().optional(),
+      state: z.string().optional(),
+      zip_code: z.string().optional(),
+      address: z.string().optional(),
+
+   }),
+});
 export const userValidationSchema = {
-   userRegistrationSchema
+   userRegistrationSchema,
+   updateUserProfileSchema
 }

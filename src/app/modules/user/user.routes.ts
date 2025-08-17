@@ -11,4 +11,10 @@ routes.post(
     UserComtroller.createNewUser
 )
 
+routes.patch(
+    '/profile/:id',
+    validate(userValidationSchema.updateUserProfileSchema),
+    UserComtroller.updateUserProfile
+)
+
 export const UserRoutes: Router = routes

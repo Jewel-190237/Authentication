@@ -65,4 +65,49 @@ export class UserComtroller {
          })
       }
    })
+
+   static updateUserProfile = catchAsync(async (req, res) => {
+      const { body } = req.body;
+      const { id } = req.params;
+
+      if (!id) {
+         throw new AppError(
+            HttpStatusCode.BadRequest,
+            "Invalid Request",
+            "User ID is required"
+         );
+      }
+
+      const disallowedFields = ["password", "role", "is_deleted"];
+      for (const field of disallowedFields) {
+         if (body[field] !== undefined) {
+            throw new AppError(
+               HttpStatusCode.BadRequest,
+               "Invalid Update",
+               `${field} cannot be updated directly`
+            );
+         }
+      }
+
+      const updatedUser = await UserService.updateUserProfile(
+         { _id: id },
+         body,
+      );
+
+
+      if (!updatedUser) {
+         throw new AppError(
+            HttpStatusCode.NotFound,
+            "Not Found",
+            "User not found"
+         );
+      }
+
+      sendResponse(res, {
+         success: true,
+         statusCode: httpStatus.OK,
+         message: "User profile updated successfully",
+         data: updatedUser,
+      });
+   })
 }
