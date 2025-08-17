@@ -10,7 +10,7 @@ const schema = new Schema<TOTP>(
          lowercase: true,
          required: true
       },
-      code: {
+      otp: {
          type: String,
          required: true
       },

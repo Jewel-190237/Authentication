@@ -1,6 +1,6 @@
 export type TOTP = {
     email: string,
-    code: string,
+    otp: string,
     action: string,
     attempts: number;
     expireAt: Date;

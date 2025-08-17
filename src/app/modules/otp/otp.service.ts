@@ -1,34 +1,16 @@
-import { HttpStatusCode } from "axios";
-import AppError from "../../errors/AppError";
 import OTP from "./otp.model";
 
 export class OTPService {
-   static async postOTPByEmail({ email, code, action }: { email: string, code: string, action: string }): Promise<void> {
+   static async postOTPByEmail({ email, otp, action }: { email: string, otp: string, action: string }): Promise<void> {
       await OTP.create({
          email: email.toLowerCase().trim(),
-         code: code,
-         action: action
+         otp: otp.trim(),
+         action: action.toLowerCase()
       })
-   }
-
-   // Use when you want OTP (verification step)
-   static async findOneByEmail({ email, code}: { email: string, code: string }): Promise<any> {
-      const otp = await OTP.findOne({
-         email: email.toLowerCase().trim(),
-         code,
-      })
-      if (!otp) {
-         throw new AppError(
-            HttpStatusCode.NotFound,
-            'Request Failed',
-            'Invalid or Expired OTP!'
-         )
-      }
-      return otp;
    }
 
    // Use when you just want to check if OTP exists
-   static async findOneByQuery(query: any): Promise<any | null> {
-      return await OTP.findOne(query);
+   static async findOTPByEmail({ queary }: { queary: any }): Promise<any> {
+      return await OTP.findOne(queary)
    }
 }
