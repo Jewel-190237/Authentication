@@ -14,9 +14,8 @@ export class UserController {
       let otp;
 
       otp = await OTPService.findOneByEmail({
-         email: body.idetifier,
-         code: body.code,
-         action: body.action
+         email: body.email,
+         code: body.otp
       })
 
       if (!otp) {
@@ -38,21 +37,19 @@ export class UserController {
             'OTP expired! Please try again.',
          );
       }
-
-      if (otp && otp.attempst > 0 && body.code === otp.code) {
+      if (otp && otp.attempts > 0 && body.otp === otp.code) {
          const newUser = await UserService.createNewUser(body)
-
          const tokenPayload: any = {
             //@ts-ignore
-            _id: newUser._id,
+            _id: newUser?._id,
             //@ts-ignore
-            name: newUser.name,
+            name: newUser?.name,
             //@ts-ignore
-            email: newUser.email,
+            email: newUser?.email,
             //@ts-ignore
-            phone: newUser.phone,
+            phone: newUser?.phone,
             //@ts-ignore
-            role: newUser.role,
+            role: newUser?.role,
          };
          const accessToken = createToken(
             tokenPayload,

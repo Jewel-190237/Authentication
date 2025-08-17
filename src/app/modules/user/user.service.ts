@@ -13,5 +13,6 @@ export class UserService {
             'Failed to create account! Please try again.'
          )
       }
+      return newUser
    }
 }
