@@ -8,6 +8,7 @@ import { createToken } from "../auth/auth.utils";
 import config from "../../config";
 import sendResponse from "../../utils/sendResponse";
 import httpStatus from 'http-status';
+import { AuthService } from "../auth/auth.service";
 export class UserComtroller {
    static createNewUser = catchAsync(async (req, res) => {
       const { body } = req.body;
@@ -108,6 +109,32 @@ export class UserComtroller {
          statusCode: httpStatus.OK,
          message: "User profile updated successfully",
          data: updatedUser,
+      });
+   })
+
+   static updatePassword = catchAsync(async (req, res) => {
+      const { body } = req.body
+      const { _id } = req.params
+
+      if (!_id) {
+         throw new AppError(
+            HttpStatusCode.BadRequest,
+            "Invalid Request",
+            "User ID is required"
+         );
+      }
+
+      const user = await UserService.findUserById(_id)
+      if (!user || user?.is_deleted === true) {
+         throw new AppError(400, 'Request failed', 'User can not exists');
+      }
+
+      await AuthService.updatePassword(_id, body)
+      sendResponse(res, {
+         statusCode: httpStatus.OK,
+         success: true,
+         message: 'Password updated Successfully',
+         data: undefined,
       });
    })
 }

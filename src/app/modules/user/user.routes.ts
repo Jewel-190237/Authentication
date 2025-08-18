@@ -17,4 +17,10 @@ routes.patch(
     UserComtroller.updateUserProfile
 )
 
+routes.patch(
+    '/update_password/:id',
+    validate(userValidationSchema.updatePasswordSchema),
+    UserComtroller.updatePassword
+)
+
 export const UserRoutes: Router = routes

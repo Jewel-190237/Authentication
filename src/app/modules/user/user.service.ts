@@ -36,4 +36,16 @@ export class UserService {
       ).lean()
       return updatedUser
    }
+
+   static async findUserById(_id: string | Types.ObjectId) {
+      const user = await User.findById(_id)
+      if (!user) {
+         throw new AppError(
+            HttpStatusCode.NotFound,
+            'Request Failed',
+            'User not found!',
+         );
+      }
+      return user;
+   }
 }

@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { z } from "zod";
 
 const userRegistrationSchema = z.object({
@@ -71,7 +72,48 @@ const updateUserProfileSchema = z.object({
 
    }),
 });
+
+const updatePasswordSchema = z.object({
+   body: z.object({
+      _id: z
+         .string({
+            invalid_type_error: 'User _id must be string',
+            required_error: 'User _id must be required',
+         })
+         .refine((data) => mongoose.Types.ObjectId.isValid(data), {
+            message: '_id must be required',
+         }),
+      password: z
+         .string({
+            invalid_type_error: 'Password must be string',
+            required_error: 'Password is required',
+         })
+         .min(6, {
+            message:
+               'Password must be greater than or equal to 6 characters',
+         })
+         .max(100, {
+            message:
+               'Password must be less than or equal to 100 characters',
+         }),
+      confirm_password: z
+         .string({
+            invalid_type_error: 'Confirm password must be string',
+            required_error: 'Confirm password is required',
+         })
+         .min(6, {
+            message:
+               'Password must be greater than or equal to 6 characters',
+         })
+         .max(100, {
+            message:
+               'Password must be less than or equal to 100 characters',
+         }),
+   }),
+});
+
 export const userValidationSchema = {
    userRegistrationSchema,
-   updateUserProfileSchema
+   updateUserProfileSchema,
+   updatePasswordSchema
 }
