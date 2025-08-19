@@ -1,5 +1,6 @@
-import { Schema } from "mongoose";
+import { model, Schema } from "mongoose";
 import { TOTP } from "./otp.interface";
+import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const schema = new Schema<TOTP>(
    {
@@ -30,3 +31,7 @@ const schema = new Schema<TOTP>(
    },
    { timestamps: true }
 )
+
+schema.plugin(mongooseAggregatePaginate)
+const OTP = model<TOTP>('otps', schema);
+export default OTP
