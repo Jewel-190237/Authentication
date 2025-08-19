@@ -49,5 +49,15 @@ export class UserService {
       return user;
    }
 
-   // static async loginUser(params)
+   static async findUserByEmail(email: string) {
+      const user = await User.findOne({ email })
+      if (!user) {
+         throw new AppError(
+            HttpStatusCode.NotFound,
+            'Request Failed',
+            'User not found!',
+         );
+      }
+      return user
+   }
 }
