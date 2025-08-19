@@ -5,7 +5,7 @@ import { OTPController } from "./otp.controller";
 
 const route = Router()
 route.post(
-    '/otp',
+    '/sendOTP',
     validate(OTPValidation.postValidationSchema),
     OTPController.sentOTP
 )

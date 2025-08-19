@@ -4,7 +4,7 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const schema = new Schema<TOTP>(
    {
-      email: {
+      identifier: {
          type: String,
          require: true,
          trim: true,

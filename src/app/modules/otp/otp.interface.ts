@@ -2,7 +2,7 @@ import { Dayjs } from "dayjs";
 
 export type TOTP = {
    createdAt: string | number | Date | Dayjs | null | undefined;
-   email: string,
+   identifier: string,
    otp: string,
    action: string,
    attempts: number;

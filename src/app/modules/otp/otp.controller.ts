@@ -58,11 +58,12 @@ export class OTPController {
       };
 
       await sendUserEmail(data);
-      await OTPService.postOTPByEmail({
+      const otpdata = await OTPService.postOTPByEmail({
         identifier: otpPayload.identifier,
         otp: otp,
         action: otpPayload.action
       })
+      console.log("🚀 ~ OTPController ~ otpdata:", otpdata)
     }
     else {
       // form SMS
@@ -74,6 +75,7 @@ export class OTPController {
       data: {
         type: validationResult.success ? 'email' : 'phone',
         identifier: identifier.trim(),
+        otp: otp
       },
     });
   })
