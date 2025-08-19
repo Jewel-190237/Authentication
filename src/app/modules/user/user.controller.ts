@@ -114,9 +114,10 @@ export class UserComtroller {
 
    static updatePassword = catchAsync(async (req, res) => {
       const { body } = req.body
-      const { _id } = req.params
+      const {id} = req.params
+      console.log("🚀 ~ UserComtroller ~ _id:", id)
 
-      if (!_id) {
+      if (!id) {
          throw new AppError(
             HttpStatusCode.BadRequest,
             "Invalid Request",
@@ -124,12 +125,12 @@ export class UserComtroller {
          );
       }
 
-      const user = await UserService.findUserById(_id)
+      const user = await UserService.findUserById(id)
       if (!user || user?.is_deleted === true) {
          throw new AppError(400, 'Request failed', 'User can not exists');
       }
 
-      await AuthService.updatePassword(_id, body)
+      await AuthService.updatePassword(id, body)
       sendResponse(res, {
          statusCode: httpStatus.OK,
          success: true,
