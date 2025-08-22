@@ -66,5 +66,10 @@ export class UserController {
             data: accessToken
          })
       }
+      if (code) {
+            code.attempts -= 1;
+            //@ts-ignore
+            await code.save();
+        }
    })
 }
