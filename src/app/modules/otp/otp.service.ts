@@ -1,3 +1,4 @@
+import { TOTP } from "./otp.interface";
 import OTP from "./otp.model";
 
 type PostOtpPayload = {
@@ -21,5 +22,9 @@ export class OTPService {
    static async findOTPByQuery(query: any) {
       const otp = await OTP.findOne(query);
       return otp;
+   }
+
+   static async findOTPByIdentifier(query:Partial<TOTP>) {
+      return await OTP.findOne(query)
    }
 }
