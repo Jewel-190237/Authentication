@@ -5,6 +5,10 @@ import AppError from "../../errors/AppError";
 import dayjs from "dayjs";
 import { TOTP } from "../otp/otp.interface";
 import { UserService } from "./user.service";
+import { createToken } from "../auth/auth.utils";
+import config from "../../config";
+import sendResponse from "../../utils/sendResponse";
+import httpStatus from 'http-status';
 
 export class UserController {
    static createUser = catchAsync(async (req, res) => {
@@ -48,6 +52,19 @@ export class UserController {
             phone: newUser?.phone,
             role: newUser?.role,
          };
+
+         const accessToken = createToken(
+            tokenPayload,
+            config.jwt_access_secret as string,
+            config.jwt_access_expires_in as string,
+         )
+
+         sendResponse(res, {
+            success: true,
+            statusCode: httpStatus.OK,
+            message: "user created Successfully",
+            data: accessToken
+         })
       }
    })
 }
