@@ -2,7 +2,6 @@ import { Types } from 'mongoose';
 export type TUser = {
     name: string;
     identifier?: string | undefined | null;
-    phone?: string | undefined | null;
     password: string;
     image?: string;
     role: string;

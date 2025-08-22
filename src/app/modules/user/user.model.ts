@@ -18,10 +18,6 @@ const schema = new Schema<TUser>(
             unique: [true, 'Email address already exists'],
             trim: true,
         },
-        phone: {
-            type: String,
-            trim: true,
-        },
         password: String,
         image: String,
         role: {
