@@ -7,6 +7,11 @@ import { TTokenPayload } from "./auth.interface"
 import config from "../../config"
 import sendResponse from "../../utils/sendResponse"
 import httpStatus from 'http-status';
+import { TOTP } from "../otp/otp.interface"
+import { OTPService } from "../otp/otp.service"
+import dayjs from "dayjs"
+import { TUser } from "../user/user.interface"
+import { AuthService } from "./auth.service"
 
 export class AuhtController {
   static login = catchAsync(async (req, res) => {
@@ -38,8 +43,7 @@ export class AuhtController {
     const tokenPayload: TTokenPayload = {
       _id: user._id,
       name: user.name,
-      email: user.email,
-      phone: user.phone,
+      identifier: user.identifier,
     };
 
     const accessToken = createToken(
@@ -69,5 +73,93 @@ export class AuhtController {
         refreshToken,
       },
     });
+  })
+
+  static forgetPasswordOTPVerify = catchAsync(async (req, res) => {
+    const { body } = req.body;
+    const { id } = req.params
+
+    const query = {
+      identifier: body.identifier,
+      otp: body.otp
+    }
+
+    let code: TOTP | null;
+    let user: any
+
+    user = await UserService.findUserById(id)
+    if (!user) {
+      throw new AppError(
+        400,
+        'Request Failed',
+        'Usser Not Found in this identifier',
+      );
+    }
+
+    code = await OTPService.findOTPByIdentifier(query)
+    if (!code) {
+      throw new AppError(
+        HttpStatusCode.BadRequest,
+        'verification failed',
+        'invalid or expire otp'
+      )
+    }
+
+    const startTime = dayjs(code.createdAt)
+    const endTime = dayjs(Date.now())
+
+    const expireTimeInMinutes = endTime.diff(startTime, 'minutes')
+
+    if (expireTimeInMinutes >= 2) {
+      throw new AppError(
+        400,
+        'Invalid request',
+        'OTP expired! Please try again.',
+      );
+    }
+
+    if (code && code.attempts > 0 && code.otp === body.otp) {
+      const tokenPayload: TTokenPayload = {
+        _id: user._id,
+        name: user.name,
+        identifier: user.identifier,
+      };
+
+      const accessToken = createToken(
+        tokenPayload,
+        config.jwt_access_secret as string,
+        config.jwt_access_expires_in as string,
+      )
+
+      sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "OTP Verified Successfully",
+        data: accessToken
+      })
+    }
+  })
+
+  static setPasswordForForgetPassword = catchAsync(async (req, res) => {
+    const { body } = req.body
+    const { id } = req.params
+
+    const user = await UserService.findUserById(id)
+    if (!user) {
+      throw new AppError(
+        400,
+        'Request Failed',
+        'Usser Not Found in this identifier',
+      );
+    }
+
+    await AuthService.forgetPassword(body, id)
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Password updated Successfully',
+      data: null,
+    });
+
   })
 }

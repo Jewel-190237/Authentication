@@ -8,6 +8,7 @@ import config from "../../config"
 import { sendUserEmail } from "../../utils/sendEmail"
 import sendResponse from "../../utils/sendResponse"
 import httpStatus from 'http-status';
+import { UserService } from "../user/user.service"
 
 export class OTPController {
   static sentOTP = catchAsync(async (req, res) => {
@@ -16,10 +17,24 @@ export class OTPController {
     const validationResult = validEmailCheck(identifier)
 
     if (action === 'signup') {
-      // check user exixts in this identifier
+      const user = await UserService.findUserByIdentifier(identifier)
+      if (user) {
+        throw new AppError(
+          400,
+          'Request Failed',
+          'Usser already exists, please login now',
+        );
+      }
     }
     else {
-      // check user exixts in this identifer
+      const user = await UserService.findUserByIdentifier(identifier)
+      if (!user) {
+        throw new AppError(
+          400,
+          'Request Failed',
+          'Usser Not Found in this identifier',
+        );
+      }
     }
 
     const otpPayload = {
@@ -63,7 +78,6 @@ export class OTPController {
         otp: otp,
         action: otpPayload.action
       })
-      console.log("🚀 ~ OTPController ~ otpdata:", otpdata)
     }
     else {
       // form SMS

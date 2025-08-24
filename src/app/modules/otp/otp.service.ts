@@ -20,11 +20,11 @@ export class OTPService {
    }
 
    static async findOTPByQuery(query: any) {
-      const otp = await OTP.findOne(query);
-      return otp;
+      return await OTP.findOne(query);
+
    }
 
-   static async findOTPByIdentifier(query:Partial<TOTP>) {
+   static async findOTPByIdentifier(query: Partial<TOTP>) {
       return await OTP.findOne(query)
    }
 }

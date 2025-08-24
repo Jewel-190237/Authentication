@@ -11,4 +11,16 @@ route.post(
     AuhtController.login
 )
 
+route.post(
+    '/forget-password/verify-otp/:id',
+    validate(AuthValidation.forgetPasswordOtpVerify),
+    AuhtController.forgetPasswordOTPVerify
+)
+
+route.post(
+    '/forget-password/submit/:id',
+    validate(AuthValidation.forgetPasswordOtpVerify),
+    AuhtController.forgetPasswordOTPVerify
+)
+
 export const AuthRoutes: Router = route
