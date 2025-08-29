@@ -10,7 +10,6 @@ import httpStatus from 'http-status';
 import { TOTP } from "../otp/otp.interface"
 import { OTPService } from "../otp/otp.service"
 import dayjs from "dayjs"
-import { TUser } from "../user/user.interface"
 import { AuthService } from "./auth.service"
 
 export class AuhtController {
