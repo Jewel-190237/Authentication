@@ -17,5 +17,3 @@ export type TUser = {
     is_deleted: boolean;
     isModified: (field: string) => boolean;
 };
-
-
