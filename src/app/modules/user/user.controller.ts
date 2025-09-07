@@ -67,9 +67,36 @@ export class UserController {
          })
       }
       if (code) {
-            code.attempts -= 1;
-            //@ts-ignore
-            await code.save();
-        }
+         code.attempts -= 1;
+         //@ts-ignore
+         await code.save();
+      }
+   })
+
+   static updateUserProfile = catchAsync(async (req, res) => {
+      const { body } = req.body
+      const { _id } = res.locals.user
+      const query = { _id: _id }
+      const user = await UserService.findUserById(_id)
+      if (!user) {
+         throw new AppError(
+            HttpStatusCode.BadRequest,
+            'user not found',
+            'user not found in this id'
+         )
+      }
+
+      const updatedUser = await UserService.updateUserProfle({ query: query, updatedDocuments: body })
+      sendResponse(res, {
+         statusCode: httpStatus.OK,
+         success: true,
+         message: 'Profile updated successfully',
+         data: {
+            ...updatedUser,
+            password: undefined,
+            __v: undefined,
+            is_deleted: undefined,
+         },
+      });
    })
 }
