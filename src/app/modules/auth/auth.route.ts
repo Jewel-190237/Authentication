@@ -26,4 +26,11 @@ route.post(
     AuhtController.setPasswordForForgetPassword
 )
 
+route.post(
+    '/reset-password',
+    auth(...USER_ROLE_ENUM),
+    validate(AuthValidation.resetPasswordValidationSchema),
+    AuhtController.resetPassword
+)
+
 export const AuthRoutes: Router = route

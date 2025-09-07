@@ -74,8 +74,53 @@ const forgetPasswordValidationSchema = z.object({
    }),
 });
 
+const resetPasswordValidationSchema = z.object({
+   body: z.object({
+      old_password: z
+         .string({
+            invalid_type_error: 'Old password must be string',
+            required_error: 'Old password is required',
+         })
+         .min(6, {
+            message:
+               'Password must be greater than or equal to 6 characters',
+         })
+         .max(100, {
+            message:
+               'Password must be less than or equal to 100 characters',
+         }),
+      password: z
+         .string({
+            invalid_type_error: 'Password must be string',
+            required_error: 'Password is required',
+         })
+         .min(6, {
+            message:
+               'Password must be greater than or equal to 6 characters',
+         })
+         .max(100, {
+            message:
+               'Password must be less than or equal to 100 characters',
+         }),
+      confirm_password: z
+         .string({
+            invalid_type_error: 'Confirm password must be string',
+            required_error: 'Confirm password is required',
+         })
+         .min(6, {
+            message:
+               'Password must be greater than or equal to 6 characters',
+         })
+         .max(100, {
+            message:
+               'Password must be less than or equal to 100 characters',
+         }),
+   }),
+});
+
 export const AuthValidation = {
    userLoginValidationSchema,
    forgetPasswordOtpVerify,
-   forgetPasswordValidationSchema
+   forgetPasswordValidationSchema,
+   resetPasswordValidationSchema
 }

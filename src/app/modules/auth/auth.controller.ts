@@ -161,4 +161,36 @@ export class AuhtController {
     });
 
   })
+
+  static resetPassword = catchAsync(async (req, res) => {
+    const { body } = req.body;
+    const { _id, password } = res.locals.user
+
+    const isPasswordMatched = await comparePassword(body.old_password, password)
+    
+    if (!isPasswordMatched) {
+      throw new AppError(
+        HttpStatusCode.BadRequest,
+        'Request Failed',
+        'Password not matched! Please try again.',
+      );
+    }
+
+    const user = await UserService.findUserById(_id)
+    if (!user) {
+      throw new AppError(
+        400,
+        'Request Failed',
+        'Usser Not Found in this identifier',
+      );
+    }
+
+    await AuthService.forgetPassword(body, _id)
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Password updated Successfully',
+      data: null,
+    });
+  })
 }
