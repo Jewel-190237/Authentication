@@ -16,4 +16,14 @@ export class BlogController {
          data: blog,
       });
    })
+
+   static getAllBlog = catchAsync(async (req, res) => {
+      const blog = await BlogService.getAllBlog();
+      sendResponse(res, {
+         statusCode: HttpStatusCode.Found,
+         success: true,
+         message: 'Blog retrived successfully',
+         data: blog,
+      });
+   })
 }

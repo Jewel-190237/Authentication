@@ -15,4 +15,16 @@ export class BlogService {
       }
       return data;
    }
+
+   static async getAllBlog() {
+      const data = await Blog.find()
+      if (!data) {
+         throw new AppError(
+            HttpStatusCode.BadRequest,
+            'Request failed !',
+            'Blog not found',
+         );
+      }
+      return data;
+   }
 }
