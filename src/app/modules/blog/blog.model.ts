@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 import { TBlog } from "./blog.interface";
-import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
+import aggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const blogSchema = new Schema<TBlog>(
   {
@@ -21,7 +21,7 @@ const blogSchema = new Schema<TBlog>(
     },
     author: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "user",
       required: [true, "Blog author is required"],
     },
     image: {
@@ -44,5 +44,5 @@ const blogSchema = new Schema<TBlog>(
     timestamps: true, 
   }
 );
-blogSchema.plugin(mongooseAggregatePaginate)
+blogSchema.plugin(aggregatePaginate)
 export const Blog = model<TBlog>("Blog", blogSchema);

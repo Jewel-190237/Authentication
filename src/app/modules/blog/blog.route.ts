@@ -14,4 +14,9 @@ routes.post(
     BlogController.createBlog
 )
 
+routes.get(
+    '/get-all-blog',
+    BlogController.getAllBlog
+)
+
 export const BlogRoutes = routes
