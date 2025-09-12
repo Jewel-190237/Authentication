@@ -17,6 +17,7 @@ export class BlogService {
       }
       return data;
    }
+
    static async findBlogById(_id: string | Types.ObjectId) {
       const data = await Blog.findById(_id)
          .populate({ path: 'author', select: 'name image' })
@@ -32,7 +33,7 @@ export class BlogService {
       return data
    }
 
-   static async getAllBlogWihtpagination(
+   static async getAllBlogWithPagination(
       filter: Record<string, string | boolean | number>,
       query: Record<string, string | boolean | number>,
       select: Record<string, string | boolean | number>

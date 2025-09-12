@@ -52,7 +52,7 @@ export class BlogController {
          updatedAt: 0,
       };
 
-      const blog = await BlogService.getAllBlogWihtpagination(
+      const blog = await BlogService.getAllBlogWithPagination(
          filter,
          query,
          select,
