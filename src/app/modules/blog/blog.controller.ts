@@ -42,7 +42,7 @@ export class BlogController {
          sendResponse(res, {
             statusCode: HttpStatusCode.Found,
             success: true,
-            message: 'Blog retrived successfully',
+            message: 'Blog retrieved successfully',
             data: blog,
          });
       }
