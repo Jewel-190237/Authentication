@@ -23,9 +23,21 @@ export class BlogController {
       const filter: any = {}
 
       if (query.search) {
-         filter['title'] = {
-            $regex: new RegExp(query.search, 'i')
-         }
+         filter['$or'] = [
+            {
+               title: { $regex: new RegExp(query.search, 'i') }
+            },
+            {
+               slug: { $regex: new RegExp(query.search, 'i') }
+            },
+            {
+               content: { $regex: new RegExp(query.search, 'i') }
+            }
+         ]
+      }
+
+      if (query.isPublished !== undefined) {
+         filter['isPublished'] = query.isPublished === 'true';
       }
 
       if (query._id) {
