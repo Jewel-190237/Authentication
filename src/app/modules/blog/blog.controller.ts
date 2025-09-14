@@ -22,20 +22,6 @@ export class BlogController {
       const { query }: any = req
       const filter: any = {}
 
-      if (query.search) {
-         filter['$or'] = [
-            {
-               title: { $regex: new RegExp(query.search, 'i') }
-            },
-            {
-               slug: { $regex: new RegExp(query.search, 'i') }
-            },
-            {
-               content: { $regex: new RegExp(query.search, 'i') }
-            }
-         ]
-      }
-
       if (query.isPublished !== undefined) {
          filter['isPublished'] = query.isPublished === 'true';
       }
