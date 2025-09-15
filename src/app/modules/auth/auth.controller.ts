@@ -42,6 +42,7 @@ export class AuhtController {
     const tokenPayload: TTokenPayload = {
       _id: user._id,
       name: user.name,
+      role:user.role,
       identifier: user.identifier,
     };
 
