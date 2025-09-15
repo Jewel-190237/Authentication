@@ -38,7 +38,9 @@ export class BlogService {
         select: Record<string, string | boolean | number>,
     ) {
         const aggregate: any[] = [
-            { $match: filter },
+            {
+                $match: filter,
+            },
             {
                 $lookup: {
                     from: 'users',
@@ -48,8 +50,8 @@ export class BlogService {
                         {
                             $project: {
                                 _id: 0,
-                                name: 1,
                                 image: 1,
+                                name: 1,
                             },
                         },
                     ],
@@ -64,7 +66,6 @@ export class BlogService {
             },
         ];
 
-        // ✅ Apply search here (after author is available)
         if (query.search) {
             const regex = new RegExp(query.search as string, 'i');
             aggregate.push({
@@ -73,7 +74,7 @@ export class BlogService {
                         { title: { $regex: regex } },
                         { slug: { $regex: regex } },
                         { content: { $regex: regex } },
-                        { 'author.name': { $regex: regex } }, // 👈 search in author
+                        { 'author.name': { $regex: regex } },
                     ],
                 },
             });
@@ -84,11 +85,46 @@ export class BlogService {
         });
 
         const option = {
-            page: +query.page || 1,
-            limit: +query.limit || 10,
+            page: +query.page | 1,
+            limit: +query.limit | 10,
             sort: { createdAt: -1 },
         };
 
         return await Blog.aggregatePaginate(aggregate, option);
+    }
+
+    static async updateBlog(
+        query: Record<string, string | Types.ObjectId>,
+        updatedDocuments: Record<string, string | boolean | number>,
+        section = undefined,
+    ) {
+        const options = {
+            section: section,
+            new: true,
+        };
+
+        const data = Blog.findOneAndUpdate(query, updatedDocuments, options);
+        if (!data) {
+            throw new AppError(
+                HttpStatusCode.NotFound,
+                'Request failed !',
+                'Can not update  blog ! please try again',
+            );
+        }
+
+        return data;
+    }
+
+    static async deleteBlog(_id: string | Types.ObjectId) {
+        const data = await Blog.findByIdAndDelete(_id);
+
+        if (!data) {
+            throw new AppError(
+                HttpStatusCode.NotFound,
+                'Request failed !',
+                'Blog not found.',
+            );
+        }
+        return data;
     }
 }
