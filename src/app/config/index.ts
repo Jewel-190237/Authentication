@@ -25,4 +25,7 @@ export default {
     aws_region: process.env.AWS_REGION,
 
     google_map_api_key: process.env.GOOGLE_MAP_API_KEY,
+
+    store_password: process.env.STORE_PASSWORD,
+    store_ID: process.env.STORE_ID,
 };
