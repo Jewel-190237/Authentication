@@ -28,4 +28,7 @@ export default {
 
     store_password: process.env.STORE_PASSWORD,
     store_ID: process.env.STORE_ID,
+
+    frontend_url: process.env.FRONTEND_URL,
+    backend_url: process.env.BACKEND_URL,
 };

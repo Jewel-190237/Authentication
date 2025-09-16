@@ -8,13 +8,13 @@ import { PaymentValidation } from './payment.validation';
 const router = Router();
 
 router.post(
-    '/initiate',
+    '/ssl/create',
     auth(...USER_ROLE_ENUM),
     validate(PaymentValidation.paymentCreateValidationSchema),
     PaymentController.initiatePayment,
 );
-router.post('/success/:transactionId', PaymentController.paymentSuccess);
-router.post('/fail/:transactionId', PaymentController.paymentFail);
-router.post('/cancel/:transactionId', PaymentController.paymentCancel);
+router.post('/ssl/success/:transactionId', PaymentController.paymentSuccess);
+router.post('/ssl/fail/:transactionId', PaymentController.paymentFail);
+router.post('/ssl/cancel/:transactionId', PaymentController.paymentCancel);
 
 export const PaymentRoutes = router;
