@@ -13,4 +13,10 @@ routes.post(
     ProductController.createProduct,
 );
 
+routes.get(
+    '/get-all-product',
+    auth('admin'),
+    ProductController.getAllProductsWithPagination
+)
+
 export const ProductRoutes = routes;

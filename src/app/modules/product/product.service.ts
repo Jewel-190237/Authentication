@@ -29,7 +29,7 @@ export class ProductService {
       return data
    }
 
-   static async getAllBlogWithPagination(
+   static async findAllBlogWithPagination(
       filter: Record<string, string | boolean | number>,
       query: Record<string, string | boolean | number>,
       select: Record<string, string | boolean | number>,
@@ -39,29 +39,6 @@ export class ProductService {
          {
             $match: filter,
          },
-         {
-            $lookup: {
-               from: 'users',
-               foreignField: '_id',
-               localField: 'author',
-               pipeline: [
-                  {
-                     $project: {
-                        _id: 1,
-                        name: 1,
-                        image: 1
-                     },
-                  },
-               ],
-               as: 'author',
-            }
-         },
-         {
-            $unwind: {
-               path: '$author',
-               preserveNullAndEmptyArrays: true
-            }
-         },
       ]
 
       if (query.search) {
@@ -70,21 +47,41 @@ export class ProductService {
          aggregate.push({
             $match: {
                $or: [
-                  { title: { $regex: regex } },
                   { name: { $regex: regex } },
-                  { content: { $regex: regex } }
+                  { description: { $regex: regex } }
                ]
             }
          })
       }
+
+      if(query.maxPrice || query.minPrice){
+         const priceFilter: any = {}
+
+         if(query.maxPrice){
+            priceFilter.$lte = Number(query.maxPrice)
+         }
+
+         if(query.minPrice){
+            priceFilter.$gte = Number(query.minPrice)
+         }
+
+         aggregate.push({
+            $match: {
+               price: priceFilter
+            }
+         })
+      }
+
+
+
       aggregate.push({
-         $project: select
+         $project: select,
       })
 
       const option = {
          page: +query.page || 1,
          limit: +query.limit || 10,
-         sort: { createdAt: -1 }
+         sort: { createdAt: -1 },
       }
 
       return await Product.aggregatePaginate(aggregate, option)
