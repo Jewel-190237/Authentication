@@ -49,11 +49,41 @@ export class ProductController {
       };
 
       const products = await ProductService.findAllBlogWithPagination(filter, query, select)
-       sendResponse(res, {
-            statusCode: HttpStatusCode.Created,
-            success: true,
-            message: 'Product list get successfully',
-            data: products,
-        });
+      sendResponse(res, {
+         statusCode: HttpStatusCode.Created,
+         success: true,
+         message: 'Product list get successfully',
+         data: products,
+      });
+   })
+
+   static updateProduct = catchAsync(async (req, res) => {
+      const { body } = req.body
+      const { _id } = req.params
+
+      if (!_id) {
+         throw new AppError(
+            HttpStatusCode.BadRequest,
+            'Request Failed !',
+            'Product id is required!',
+         );
+      }
+
+      const exist = await ProductService.findProductById(_id);
+      if (!exist) {
+         throw new AppError(
+            HttpStatusCode.BadRequest,
+            'Request Failed !',
+            'Blog not found !',
+         );
+      }
+
+      const data = await ProductService.updateProduct({ _id: _id }, body)
+      sendResponse(res, {
+         success: true,
+         statusCode: HttpStatusCode.Ok,
+         message: 'Product updated successfully',
+         data: data
+      })
    })
 }

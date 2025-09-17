@@ -54,14 +54,14 @@ export class ProductService {
          })
       }
 
-      if(query.maxPrice || query.minPrice){
+      if (query.maxPrice || query.minPrice) {
          const priceFilter: any = {}
 
-         if(query.maxPrice){
+         if (query.maxPrice) {
             priceFilter.$lte = Number(query.maxPrice)
          }
 
-         if(query.minPrice){
+         if (query.minPrice) {
             priceFilter.$gte = Number(query.minPrice)
          }
 
@@ -86,5 +86,27 @@ export class ProductService {
 
       return await Product.aggregatePaginate(aggregate, option)
 
+   }
+
+   static async updateProduct(
+      query: Record<string, string | Types.ObjectId>,
+      updatedDocuments: Partial<TProduct>,
+      section = undefined,
+   ) {
+      const options = {
+         section: section,
+         new: true,
+      };
+
+      const data = await Product.findOneAndUpdate(query, updatedDocuments, options)
+      if (!data) {
+         throw new AppError(
+            HttpStatusCode.NotFound,
+            'Request failed !',
+            'Can not update  product ! please try again',
+         );
+      }
+
+      return data;
    }
 }

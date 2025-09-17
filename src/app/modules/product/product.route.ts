@@ -19,4 +19,11 @@ routes.get(
     ProductController.getAllProductsWithPagination
 )
 
+routes.put(
+    '/update-product/:_id',
+    auth('admin'),
+    validate(ProductValidation.productUpdateValidationSchema),
+    ProductController.updateProduct
+)
+
 export const ProductRoutes = routes;
