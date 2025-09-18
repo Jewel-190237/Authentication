@@ -18,6 +18,6 @@ const postCartValidationSchema = z.object({
     })
 })
 
-export const cartvalidation = {
+export const cartValidation = {
     postCartValidationSchema
 }

@@ -17,16 +17,11 @@ export class CartService {
    }
 
    static async findCartByQuery(query: Record<string, string | boolean | number>) {
+      console.log("🚀 ~ CartService ~ findCartByQuery ~ query:", query)
       const data = await Cart.findOne(query)
          .select('-updatedAt -__v')
-         .populate({path:'user', select:'name image'})
-      if (!data) {
-         throw new AppError(
-            HttpStatusCode.BadRequest,
-            'Request failed',
-            'Something wrong to post cart, please try again'
-         )
-      }
+         .populate({ path: 'user', select: 'name image' })
+         
       return data;
    }
 }

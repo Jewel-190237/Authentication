@@ -88,16 +88,9 @@ export class ProductService {
 
    }
 
-   static async findProductByQuery(query: Record<string, string | boolean | number>){
-      const data = await Product.findOne(query).select('-updatedAt -__V')
-      if (!data) {
-         throw new AppError(
-            HttpStatusCode.NotFound,
-            'Request Failed !',
-            'Product is not found'
-         )
-      }
-      return data
+   static async findProductByQuery(query: Record<string, string | boolean | number>) {
+      return await Product.findOne(query).select('-updatedAt -__V')
+
    }
 
    static async updateProduct(

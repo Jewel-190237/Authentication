@@ -33,6 +33,15 @@ export class CartController {
          }
       }
 
+      const exists = await ProductService.findProductById(body.product)
+      if (!exists) {
+         throw new AppError(
+            HttpStatusCode.NotFound,
+            'Request Failed',
+            'The product does not have sufficient quantity.'
+         )
+      }
+
       const product = await ProductService.findProductByQuery(productFilter as any)
 
       if (!product) {
