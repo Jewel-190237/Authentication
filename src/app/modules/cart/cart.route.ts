@@ -13,4 +13,10 @@ routes.post(
     CartController.postCart
 )
 
+routes.get(
+    '/get-cart',
+    auth('admin'),
+    CartController.getCartByUserWithPagination
+)
+
 export const CartRoutes = routes;

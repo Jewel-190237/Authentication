@@ -6,6 +6,7 @@ import { ObjectId } from 'mongodb';
 import { ProductService } from "../product/product.service";
 import sendResponse from "../../utils/sendResponse";
 export class CartController {
+
    static postCart = catchAsync(async (req, res) => {
       const { body } = req.body;
       const { user } = res.locals;
@@ -66,5 +67,37 @@ export class CartController {
          message: 'Cart updated successfully',
          data: undefined
       })
+   })
+
+   static getCartByUserWithPagination = catchAsync(async (req, res) => {
+      const { query } = req
+      const { user } = res.locals;
+
+      const filter = {
+         user: new ObjectId(user._id)
+      }
+
+      if (query._id) {
+         const cart = await CartService.findCartById(query._id as string)
+         sendResponse(res, {
+            statusCode: HttpStatusCode.Ok,
+            success: true,
+            message: 'Cart get successfully',
+            data: cart,
+         });
+      }
+
+      const select = {
+         updatedAt: 0,
+         __v: 0,
+      };
+
+      const data = await CartService.findCartWithPagination(query as any, filter as any, select)
+      sendResponse(res, {
+         statusCode: HttpStatusCode.Ok,
+         success: true,
+         message: 'Cart list get successfully',
+         data: data,
+      });
    })
 }

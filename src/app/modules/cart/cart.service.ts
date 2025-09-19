@@ -2,6 +2,7 @@ import { HttpStatusCode } from "axios";
 import AppError from "../../errors/AppError";
 import { TCart } from "./cart.interface";
 import { Cart } from "./cart.model";
+import { Types } from "mongoose";
 
 export class CartService {
    static async createCartIntoDB(payload: Partial<TCart>) {
@@ -21,6 +22,18 @@ export class CartService {
          .select('-updatedAt -__v')
          .populate({ path: 'user', select: 'name image' })
 
+      return data;
+   }
+
+   static async findCartById(_id: Types.ObjectId | string) {
+      const data = await Cart.findById(_id).populate({ path: 'user', select: 'name image' }).lean()
+      if (!data) {
+         throw new AppError(
+            HttpStatusCode.NotFound,
+            'Request failed !',
+            'Cart not found ! please check your cart id and try again.',
+         );
+      }
       return data;
    }
 
