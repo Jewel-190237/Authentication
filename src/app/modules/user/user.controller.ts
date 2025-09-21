@@ -43,9 +43,8 @@ export class UserController {
       }
 
       if (code && code.attempts > 0 && code.otp === body.otp) {
-         console.log("🚀 ~ UserController ~ newUser:")
+
          const newUser = await UserService.createNewUser(body)
-         console.log("🚀 ~ UserController ~ newUser:", newUser)
 
          const tokenPayload: any = {
             _id: newUser?._id,

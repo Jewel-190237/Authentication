@@ -6,9 +6,7 @@ import { Types } from "mongoose";
 
 export class UserService {
    static async createNewUser(user: Partial<TUser>) {
-      console.log("user service in here")
       const newUser = await User.create(user)
-      console.log("🚀 ~ UserService ~ createNewUser ~ newUser:", newUser)
       if (!newUser) {
          throw new AppError(
             HttpStatusCode.BadRequest,
