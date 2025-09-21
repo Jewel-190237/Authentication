@@ -100,4 +100,19 @@ export class CartController {
          data: data,
       });
    })
+
+   static getCartCalculation = catchAsync(async (req, res) => {
+      const { user } = res.locals
+      const filter = {
+         user: user._id
+      }
+
+      const data = await CartService.findCartCalculation(filter)
+      sendResponse(res, {
+         statusCode: HttpStatusCode.Ok,
+         success: true,
+         message: 'Cart Calculation get successfully',
+         data: data,
+      });
+   })
 }

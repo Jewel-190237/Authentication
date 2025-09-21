@@ -20,4 +20,10 @@ routes.get(
     CartController.getCartByUserWithPagination
 )
 
+routes.get(
+    '/calculate',
+    auth(...USER_ROLE_ENUM),
+    CartController.getCartCalculation
+)
+
 export const CartRoutes = routes;

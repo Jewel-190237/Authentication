@@ -118,4 +118,31 @@ export class CartService {
 
       return await Cart.aggregatePaginate(aggregate, option)
    }
+
+   static async findCartCalculation(filter: Record<string, string | Types.ObjectId>) {
+   const aggregate: any = [
+      { $match: filter }, 
+      {
+         $lookup: {
+            from: 'products',      
+            localField: 'product', 
+            foreignField: '_id',
+            as: 'productDetails'
+         }
+      },
+      { $unwind: '$productDetails' }, 
+      {
+         $group: {
+            _id: '$user',
+            totalQuantity: { $sum: '$quantity' },
+            totalPrice: { $sum: { $multiply: ['$quantity', '$productDetails.price'] } }
+         }
+      }
+   ];
+
+   const result = await Cart.aggregate(aggregate);
+
+   return result[0] || { totalQuantity: 0, totalPrice: 0 };
+}
+
 }
