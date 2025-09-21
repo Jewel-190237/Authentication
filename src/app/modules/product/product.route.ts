@@ -3,6 +3,7 @@ import validate from '../../middleware/validate';
 import { ProductValidation } from './product.validation';
 import auth from '../../middleware/auth';
 import { ProductController } from './product.controller';
+import { USER_ROLE_ENUM } from '../../utils/constants';
 
 const routes = Router();
 
@@ -15,7 +16,7 @@ routes.post(
 
 routes.get(
     '/get-all-product',
-    auth('admin'),
+    auth(...USER_ROLE_ENUM),
     ProductController.getAllProductsWithPagination
 )
 
