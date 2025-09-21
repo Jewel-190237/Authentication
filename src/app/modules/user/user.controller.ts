@@ -34,7 +34,7 @@ export class UserController {
       const endTime = dayjs(Date.now());
       const expireTimeInMinutes = endTime.diff(startTime, 'minutes')
 
-      if (expireTimeInMinutes >= 2) {
+      if (expireTimeInMinutes >= 20) {
          throw new AppError(
             400,
             'Invalid request',
@@ -43,14 +43,16 @@ export class UserController {
       }
 
       if (code && code.attempts > 0 && code.otp === body.otp) {
+         console.log("🚀 ~ UserController ~ newUser:")
          const newUser = await UserService.createNewUser(body)
+         console.log("🚀 ~ UserController ~ newUser:", newUser)
 
          const tokenPayload: any = {
             _id: newUser?._id,
             name: newUser?.name,
-            email: newUser?.email,
+            email: newUser?.identifier,
             phone: newUser?.phone,
-            role: newUser?.role,
+            role: 'user',
          };
 
          const accessToken = createToken(
@@ -91,12 +93,7 @@ export class UserController {
          statusCode: httpStatus.OK,
          success: true,
          message: 'Profile updated successfully',
-         data: {
-            ...updatedUser,
-            password: undefined,
-            __v: undefined,
-            is_deleted: undefined,
-         },
+         data: undefined
       });
    })
 }

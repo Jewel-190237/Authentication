@@ -20,7 +20,7 @@ export class AuhtController {
       throw new AppError(
         HttpStatusCode.NotFound,
         'Request Failed',
-        'User not found in this email, please register',
+        'User not found in this identifier, please register',
       );
     }
 
@@ -28,7 +28,8 @@ export class AuhtController {
       throw new AppError(
         HttpStatusCode.NotFound,
         'Request failed',
-        'User not exists!');
+        'User not exists!'
+      );
     }
 
     const passwordMatch = await comparePassword(body.password, user.password)
@@ -42,7 +43,7 @@ export class AuhtController {
     const tokenPayload: TTokenPayload = {
       _id: user._id,
       name: user.name,
-      role:user.role,
+      role: user.role,
       identifier: user.identifier,
     };
 
@@ -65,7 +66,7 @@ export class AuhtController {
         user: {
           _id: user?._id,
           name: user?.name,
-          email: user?.email,
+          identifier: user?.identifier,
           phone: user?.phone,
           role: user?.role,
         },
@@ -168,7 +169,7 @@ export class AuhtController {
     const { _id, password } = res.locals.user
 
     const isPasswordMatched = await comparePassword(body.old_password, password)
-    
+
     if (!isPasswordMatched) {
       throw new AppError(
         HttpStatusCode.BadRequest,

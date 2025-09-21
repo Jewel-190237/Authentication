@@ -21,13 +21,14 @@ const schema = new Schema<TOTP>(
       },
       attempts: {
          type: Number,
-         default: 3
+         default: 50
       },
       expireAt: {
          type: Date,
-         default: Date.now,
-         index: { expires: '2m' }
+         default: () => new Date(Date.now() + 20 * 60 * 1000), 
+         index: { expires: 0 } 
       }
+
    },
    { timestamps: true }
 )

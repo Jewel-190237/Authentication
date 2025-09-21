@@ -6,7 +6,9 @@ import { Types } from "mongoose";
 
 export class UserService {
    static async createNewUser(user: Partial<TUser>) {
+      console.log("user service in here")
       const newUser = await User.create(user)
+      console.log("🚀 ~ UserService ~ createNewUser ~ newUser:", newUser)
       if (!newUser) {
          throw new AppError(
             HttpStatusCode.BadRequest,
@@ -31,13 +33,13 @@ export class UserService {
 
    static async findUserByIdentifier(identifier: string) {
       const user = await User.findOne({ identifier: identifier })
-      if (!user) {
-         throw new AppError(
-            HttpStatusCode.NotFound,
-            'Request Failed',
-            'User not found!',
-         );
-      }
+      // if (!user) {
+      //    throw new AppError(
+      //       HttpStatusCode.NotFound,
+      //       'Request Failed',
+      //       'User not found!',
+      //    );
+      // }
       return user;
    }
 
